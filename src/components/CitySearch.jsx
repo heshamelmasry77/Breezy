@@ -108,7 +108,8 @@ const CitySearch = () => {
                   className="group relative select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-blue-600 data-[focus]:text-white cursor-pointer"
                 >
                   <div className="flex items-center">
-                    <span className="ml-3 truncate group-data-[selected]:font-semibold">
+                    <span className="ml-3 truncate group-data-[selected]:font-semibold flex gap-2 items-center">
+                      <span>⛅</span>
                       {suggestion.name} ({suggestion.country})
                     </span>
                   </div>
