@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <div>
-        {/* Header will be displayed on every page */}
+        {/* The Header will be displayed on every page */}
         <Header />
 
         {/* Page content will change based on the route */}

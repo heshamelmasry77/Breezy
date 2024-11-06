@@ -88,7 +88,7 @@ const CitySearch = () => {
       onChange={handleCitySelect}
       className="w-full max-w-96 mx-auto"
     >
-      <div className="flex items-center gap-2 mt-4">
+      <div className="flex items-center gap-2">
         <div className="relative max-w-96 w-full">
           <ComboboxInput
             className="w-full rounded-md border-0 bg-white py-2 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm"
