@@ -10,7 +10,6 @@ A responsive, single-page weather application built with **React**, **Vite**, **
 - [🛠️ Technologies Used](#️-technologies-used)
 - [⚙️ Getting Started](#️-getting-started)
 - [📈 Planned Enhancements](#-planned-enhancements)
-- [🤝 Contributing](#-contributing)
 
 ## ✨ Features
 
@@ -71,10 +70,10 @@ To run the project locally:
 - 📝 **Recently Searched Cities**: Track and display previously searched cities.
 
 ### User Experience
-- 📱 **Responsive Layouts**: Ensure design adjusts based on screen size.
+- 📱 **Responsive Layouts**: Ensure the design adjusts based on screen size.
 - ♿ **Accessibility**: Implement best practices for accessible navigation and controls.
 
 ### Testing & Deployment
 - ✅ **Unit & Integration Tests**: Cover essential components with unit tests.
-- 🌍 **Online Deployment**: Deploy a live version accessible via a test URL.
+- 🌍 **Online Deployment**: Deploy a live version accessible via a test URL `https://breezy-six.vercel.app/`.
 
