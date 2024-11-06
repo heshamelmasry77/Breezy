@@ -1,13 +1,17 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import History from './pages/History';
 
 function App() {
-  return (
-      <>
-          <h1 className="text-3xl font-bold underline text-red-500">
-              Hello world!
-          </h1>
-      </>
-  )
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/history" element={<History />} />
+            </Routes>
+        </Router>
+    );
 }
 
-export default App
+export default App;
