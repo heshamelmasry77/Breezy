@@ -1,9 +1,9 @@
-
 # 🌤️ Breezy - Weather Application
 
 A responsive, single-page weather application built with **React**, **Vite**, **Tailwind CSS**, and **React Router**. Breezy allows users to search for cities, view current weather details, and access recently searched locations.
 
 ## 📋 Table of Contents
+
 - [✨ Features](#-features)
 - [🚀 Project Setup](#-project-setup)
 - [📍 Current Routes](#-current-routes)
@@ -14,7 +14,7 @@ A responsive, single-page weather application built with **React**, **Vite**, **
 ## ✨ Features
 
 - 🔍 **City Weather Search**: Search for a city and display its weather visually.
-- 🌐 **Main and History Routes**: 
+- 🌐 **Main and History Routes**:
   - `/`: Main page, displays default weather.
   - `/history`: Shows recently searched cities and their weather.
 - 📱 **Responsive Design**: Adapts to various screen sizes for improved UX.
@@ -44,17 +44,20 @@ A responsive, single-page weather application built with **React**, **Vite**, **
 To run the project locally:
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/heshamelmasry77/Breezy
    cd breezy
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Start the development server:**
+
    ```bash
    npm run dev
    ```
@@ -64,16 +67,18 @@ To run the project locally:
 ## 📈 Planned Enhancements
 
 ### Initial Features
+
 - 🌦️ **Weather API Integration**: Set up to retrieve and display live weather data.
 - 🔍 **Autocomplete Search**: Allow users to quickly find cities with live suggestions.
 - 📍 **Current Location Weather**: Detect user location and display default weather on load.
 - 📝 **Recently Searched Cities**: Track and display previously searched cities.
 
 ### User Experience
+
 - 📱 **Responsive Layouts**: Ensure the design adjusts based on screen size.
 - ♿ **Accessibility**: Implement best practices for accessible navigation and controls.
 
 ### Testing & Deployment
+
 - ✅ **Unit & Integration Tests**: Cover essential components with unit tests.
 - 🌍 **Online Deployment**: Deploy a live version accessible via a test URL `https://breezy-six.vercel.app/`.
-
