@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCity, setTemperature } from "../store/slices/weatherSlice";
+import CitySearch from "./CitySearch.jsx";
 
 const Weather = () => {
   const dispatch = useDispatch();
@@ -14,11 +15,12 @@ const Weather = () => {
 
   return (
     <div>
-      <h1>Weather for {city}</h1>
-      <p>Temperature: {temperature}°C</p>
-      <button onClick={() => handleCityChange("Helsinki")}>
-        Set City to Helsinki
-      </button>
+      {/*<h1>Weather for {city}</h1>*/}
+      {/*<p>Temperature: {temperature}°C</p>*/}
+      {/*<button onClick={() => handleCityChange("Helsinki")}>*/}
+      {/*  Set City to Helsinki*/}
+      {/*</button>*/}
+      <CitySearch />
     </div>
   );
 };
