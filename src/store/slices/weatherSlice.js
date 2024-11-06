@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Replace with your actual OpenWeather API key
-const API_KEY = "ba45116b5274858923e542a7fafa9bd3";
+// Replace your actual OpenWeather API key
+const API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
 
 // Asynchronous function to fetch city suggestions
 export const fetchCitySuggestions = async (city) => {
@@ -19,6 +19,31 @@ export const fetchWeatherData = async (lat, lon) => {
   );
   const data = await response.json();
   return data; // Returns weather data for the selected city
+};
+
+// Async function to fetch weather for the current location
+export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
+  console.log("Fetching weather data for current location...");
+  if (navigator.geolocation) {
+    console.log("Geolocation is supported by this browser.");
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      dispatch(setStatus("loading"));
+      try {
+        console.log(latitude, longitude);
+        const weatherData = await fetchWeatherData(latitude, longitude);
+        console.log("Weather data for current location:", weatherData);
+        dispatch(setTemperature(weatherData.main.temp));
+        dispatch(setStatus("succeeded"));
+      } catch (err) {
+        dispatch(setError("Failed to fetch weather data for current location"));
+        dispatch(setStatus("failed"));
+      }
+    });
+  } else {
+    dispatch(setError("Geolocation is not supported by this browser."));
+    dispatch(setStatus("failed"));
+  }
 };
 
 const weatherSlice = createSlice({
