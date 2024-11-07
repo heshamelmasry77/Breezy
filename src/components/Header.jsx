@@ -1,29 +1,38 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { CloudIcon, HomeIcon, ClockIcon } from "@heroicons/react/24/outline";
+import CitySearch from "./CitySearch.jsx";
 
 const Header = () => {
+  const location = useLocation();
+
   return (
-    <header className="bg-blue-600 shadow-md">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header className="bg-black shadow-md h-20">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between h-full">
         {/* Logo */}
         <div className="flex items-center space-x-2 text-white">
           <CloudIcon className="h-8 w-8 text-yellow-300" aria-hidden="true" />
           <span className="text-2xl font-semibold">Breezy</span>
         </div>
 
+        {/* Conditionally render CitySearch if not on the /history page */}
+        {location.pathname !== "/history" && <CitySearch />}
+
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-6 text-white font-medium">
-          <Link
-            to="/"
-            className="flex items-center space-x-1 hover:text-yellow-300 transition"
-          >
-            <HomeIcon className="h-5 w-5" aria-hidden="true" />
-            <span>Home</span>
-          </Link>
+          {/* Conditionally render the Home link if not on the / (home) page */}
+          {location.pathname !== "/" && (
+            <Link
+              to="/"
+              className="flex items-center space-x-1 hover:text-yellow-300 transition cursor-pointer"
+            >
+              <HomeIcon className="h-5 w-5" aria-hidden="true" />
+              <span>Home</span>
+            </Link>
+          )}
           <Link
             to="/history"
-            className="flex items-center space-x-1 hover:text-yellow-300 transition"
+            className="flex items-center space-x-1 hover:text-yellow-300 transition cursor-pointer"
           >
             <ClockIcon className="h-5 w-5" aria-hidden="true" />
             <span>History</span>
