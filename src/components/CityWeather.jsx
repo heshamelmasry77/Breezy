@@ -1,24 +1,81 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   SunIcon,
   CloudIcon,
-  ArrowUpIcon,
   ArrowDownIcon,
   ArrowsRightLeftIcon,
   EyeIcon,
   FaceSmileIcon,
-  FireIcon,
 } from "@heroicons/react/20/solid";
+import CustomButton from "./shared/CustomButton.jsx";
+import {
+  setError,
+  setStatus,
+  fetchWeatherDataForCurrentLocation,
+} from "../store/slices/weatherSlice.js";
 
 const CityWeather = () => {
   const weatherData = useSelector((state) => state.weather.weatherDataHistory);
   const hasWeatherData =
     weatherData && Object.keys(weatherData).length > 0 && weatherData.main;
 
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.weather.error);
+
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      dispatch(setStatus("loading"));
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          dispatch(fetchWeatherDataForCurrentLocation(latitude, longitude));
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            dispatch(
+              setError(
+                "Location access denied. Please enable location permissions to view weather data."
+              )
+            );
+          } else {
+            dispatch(
+              setError("Unable to retrieve location. Please try again.")
+            );
+          }
+          dispatch(setStatus("failed"));
+        }
+      );
+    } else {
+      dispatch(setError("Geolocation is not supported by this browser."));
+    }
+  };
+
   if (!hasWeatherData) {
     return (
-      <div className="text-center text-gray-400">No weather data available</div>
+      <div className={"flex flex-col gap-4"}>
+        {error && <div className="text-center text-red-500 mb-4">{error}</div>}
+
+        <CustomButton
+          onClick={handleGetCurrentLocation}
+          icon={
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              viewBox="0 0 512 512"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"></path>
+            </svg>
+          }
+          text="Current Location"
+          color="bg-blue-600 self-center"
+          hoverColor="hover:bg-zinc-500"
+          textColor="text-white"
+        />
+      </div>
     );
   }
 

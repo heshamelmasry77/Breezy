@@ -1,9 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
-import { CloudIcon, HomeIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { CloudIcon } from "@heroicons/react/24/outline";
 
 const Header = () => {
-  const location = useLocation();
-
   return (
     <header className="bg-zinc-800 h-20">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between h-full">

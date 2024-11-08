@@ -1,27 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Replace your actual OpenWeather API key
+// OpenWeather API key
 const API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
 
-// Asynchronous function to fetch city suggestions
 export const fetchCitySuggestions = async (city) => {
   const response = await fetch(
     `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`
   );
-  const data = await response.json();
-  return data; // Returns array of city suggestions
+  return response.json();
 };
 
-// Asynchronous function to fetch weather data
 export const fetchWeatherData = async (lat, lon) => {
   const response = await fetch(
     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
   );
-  const data = await response.json();
-  return data; // Returns weather data for the selected city
+  return response.json();
 };
 
-// Async function to fetch weather for the current location
 export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(async (position) => {
@@ -34,7 +29,7 @@ export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
         dispatch(setStatus("succeeded"));
       } catch (err) {
         dispatch(setError("Failed to fetch weather data for current location"));
-        dispatch(setStatus(err));
+        dispatch(setStatus("failed"));
       }
     });
   } else {
@@ -52,6 +47,8 @@ const weatherSlice = createSlice({
     citySuggestions: [],
     weatherDataHistory: {},
     error: null,
+    query: "", // Added query to the state
+    selectedCity: null, // Added selectedCity to the state
   },
   reducers: {
     setCity: (state, action) => {
@@ -70,7 +67,23 @@ const weatherSlice = createSlice({
       state.error = action.payload;
     },
     addWeatherDataToHistory: (state, action) => {
-      state.weatherDataHistory = action.payload; // Add an entire weather data object to history
+      state.weatherDataHistory = action.payload;
+    },
+    resetWeatherData: (state) => {
+      state.weatherDataHistory = {};
+      state.city = "";
+      state.temperature = null;
+      state.status = "idle";
+      state.citySuggestions = [];
+      state.error = null;
+      state.query = ""; // Reset query
+      state.selectedCity = null; // Reset selectedCity
+    },
+    setQuery: (state, action) => {
+      state.query = action.payload; // Added action to set query
+    },
+    setSelectedCity: (state, action) => {
+      state.selectedCity = action.payload; // Added action to set selectedCity
     },
   },
 });
@@ -82,5 +95,9 @@ export const {
   setCitySuggestions,
   setError,
   addWeatherDataToHistory,
+  resetWeatherData,
+  setQuery,
+  setSelectedCity,
 } = weatherSlice.actions;
+
 export default weatherSlice.reducer;
