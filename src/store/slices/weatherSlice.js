@@ -34,10 +34,11 @@ export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
         const weatherData = await fetchWeatherData(latitude, longitude);
         console.log("Weather data for current location:", weatherData);
         dispatch(setTemperature(weatherData.main.temp));
+        dispatch(addWeatherDataToHistory(weatherData));
         dispatch(setStatus("succeeded"));
       } catch (err) {
         dispatch(setError("Failed to fetch weather data for current location"));
-        dispatch(setStatus("failed"));
+        dispatch(setStatus(err));
       }
     });
   } else {
@@ -53,6 +54,7 @@ const weatherSlice = createSlice({
     temperature: null,
     status: "idle",
     citySuggestions: [],
+    weatherDataHistory: {},
     error: null,
   },
   reducers: {
@@ -71,6 +73,9 @@ const weatherSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    addWeatherDataToHistory: (state, action) => {
+      state.weatherDataHistory = action.payload; // Add an entire weather data object to history
+    },
   },
 });
 
@@ -80,5 +85,6 @@ export const {
   setStatus,
   setCitySuggestions,
   setError,
+  addWeatherDataToHistory,
 } = weatherSlice.actions;
 export default weatherSlice.reducer;
