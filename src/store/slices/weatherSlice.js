@@ -23,16 +23,12 @@ export const fetchWeatherData = async (lat, lon) => {
 
 // Async function to fetch weather for the current location
 export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
-  console.log("Fetching weather data for current location...");
   if (navigator.geolocation) {
-    console.log("Geolocation is supported by this browser.");
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
       dispatch(setStatus("loading"));
       try {
-        console.log(latitude, longitude);
         const weatherData = await fetchWeatherData(latitude, longitude);
-        console.log("Weather data for current location:", weatherData);
         dispatch(setTemperature(weatherData.main.temp));
         dispatch(addWeatherDataToHistory(weatherData));
         dispatch(setStatus("succeeded"));

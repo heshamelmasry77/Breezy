@@ -31,7 +31,6 @@ const CitySearch = () => {
   // Handle input change and fetch city suggestions
   const handleInputChange = async (event) => {
     const newQuery = event.target.value;
-    console.log(newQuery);
     setQuery(newQuery);
     if (newQuery) {
       dispatch(setStatus("loading"));
@@ -55,22 +54,18 @@ const CitySearch = () => {
       return;
     }
 
-    console.log("City Selected:", city);
     setSelectedCity(city);
     setQuery("");
     dispatch(setCity(city.name));
     dispatch(setStatus("loading"));
 
     try {
-      console.log("Fetching weather data for:", city.name);
       const weatherData = await fetchWeatherData(city.lat, city.lon);
-      console.log("weatherData: ", weatherData);
       // Store the full weather data object in weatherDataHistory
       dispatch(addWeatherDataToHistory(weatherData));
       dispatch(setTemperature(weatherData.main.temp));
       dispatch(setStatus("succeeded"));
     } catch (err) {
-      console.error("Error fetching weather data:", err);
       dispatch(setError("Failed to fetch weather data"));
       dispatch(setStatus("failed"));
     }
