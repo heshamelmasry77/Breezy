@@ -78,7 +78,7 @@ const CityWeather = () => {
       {/* Weather details */}
       <div className="grid grid-cols-2 gap-4 text-sm">
         {/* Feels Like */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           {getFeelsLikeIcon(main.feels_like)}
           <p>FEELS LIKE</p>
           <p className="text-xl font-semibold">
@@ -87,35 +87,35 @@ const CityWeather = () => {
         </div>
 
         {/* Humidity */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           <CloudIcon className="h-6 w-6 text-green-400 mb-2" />
           <p>HUMIDITY</p>
           <p className="text-xl font-semibold">{main.humidity}%</p>
         </div>
 
         {/* Pressure */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           <ArrowDownIcon className="h-6 w-6 text-blue-400 mb-2" />
           <p>PRESSURE</p>
           <p className="text-xl font-semibold">{main.pressure} hPa</p>
         </div>
 
         {/* Wind Speed */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           <ArrowsRightLeftIcon className="h-6 w-6 text-yellow-500 mb-2" />
           <p>WIND SPEED</p>
           <p className="text-xl font-semibold">{wind.speed} m/s</p>
         </div>
 
         {/* Cloudiness */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           <CloudIcon className="h-6 w-6 text-gray-400 mb-2" />
           <p>CLOUDINESS</p>
           <p className="text-xl font-semibold">{clouds.all}%</p>
         </div>
 
         {/* Visibility */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-md">
+        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
           <EyeIcon className="h-6 w-6 text-purple-500 mb-2" />
           <p>VISIBILITY</p>
           <p className="text-xl font-semibold">{visibility / 1000} km</p>
