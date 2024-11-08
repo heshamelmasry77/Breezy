@@ -29,21 +29,21 @@ const CityWeather = () => {
     if (temp >= 30) {
       return (
         <FaceSmileIcon
-          className="h-6 w-6 text-yellow-500 mb-2"
+          className="h-6 w-6 text-yellow-500 mb-4"
           aria-label="Hot"
         />
       );
     } else if (temp >= 15) {
       return (
         <FaceSmileIcon
-          className="h-6 w-6 text-blue-500 mb-2"
+          className="h-6 w-6 text-blue-500 mb-4"
           aria-label="Warm"
         />
       );
     } else {
       return (
         <FaceSmileIcon
-          className="h-6 w-6 text-cyan-400 mb-2"
+          className="h-6 w-6 text-cyan-400 mb-4"
           aria-label="Cold"
         />
       );
@@ -51,12 +51,12 @@ const CityWeather = () => {
   };
 
   return (
-    <div className="p-6 text-white bg-zinc-900 rounded-lg shadow-lg space-y-6">
+    <div className="p-8 text-white bg-zinc-900 rounded-lg shadow-lg space-y-8">
       {/* City and temperature */}
       <div className="text-center">
         <h1 className="text-2xl font-semibold">{name || "City"}</h1>
         {main && (
-          <div className="flex items-center justify-center mt-2">
+          <div className="flex items-center justify-center mt-4">
             <span className="text-6xl font-bold">
               {Math.round(main.temp)}°C
             </span>
@@ -76,9 +76,9 @@ const CityWeather = () => {
       )}
 
       {/* Weather details */}
-      <div className="grid grid-cols-2 gap-4 text-sm">
+      <div className="grid grid-cols-2 gap-8 text-sm">
         {/* Feels Like */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           {getFeelsLikeIcon(main.feels_like)}
           <p>FEELS LIKE</p>
           <p className="text-xl font-semibold">
@@ -87,36 +87,36 @@ const CityWeather = () => {
         </div>
 
         {/* Humidity */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
-          <CloudIcon className="h-6 w-6 text-green-400 mb-2" />
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
+          <CloudIcon className="h-6 w-6 text-green-400 mb-4" />
           <p>HUMIDITY</p>
           <p className="text-xl font-semibold">{main.humidity}%</p>
         </div>
 
         {/* Pressure */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
-          <ArrowDownIcon className="h-6 w-6 text-blue-400 mb-2" />
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
+          <ArrowDownIcon className="h-6 w-6 text-blue-400 mb-4" />
           <p>PRESSURE</p>
           <p className="text-xl font-semibold">{main.pressure} hPa</p>
         </div>
 
         {/* Wind Speed */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
-          <ArrowsRightLeftIcon className="h-6 w-6 text-yellow-500 mb-2" />
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
+          <ArrowsRightLeftIcon className="h-6 w-6 text-yellow-500 mb-4" />
           <p>WIND SPEED</p>
           <p className="text-xl font-semibold">{wind.speed} m/s</p>
         </div>
 
         {/* Cloudiness */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
-          <CloudIcon className="h-6 w-6 text-gray-400 mb-2" />
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
+          <CloudIcon className="h-6 w-6 text-gray-400 mb-4" />
           <p>CLOUDINESS</p>
           <p className="text-xl font-semibold">{clouds.all}%</p>
         </div>
 
         {/* Visibility */}
-        <div className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg">
-          <EyeIcon className="h-6 w-6 text-purple-500 mb-2" />
+        <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
+          <EyeIcon className="h-6 w-6 text-purple-500 mb-4" />
           <p>VISIBILITY</p>
           <p className="text-xl font-semibold">{visibility / 1000} km</p>
         </div>
@@ -124,9 +124,12 @@ const CityWeather = () => {
 
       {/* Sunrise and Sunset */}
       {sys && (
-        <div className="flex justify-around mt-6 text-xs text-gray-400">
+        <div className="flex justify-around mt-8 text-xs text-gray-400">
           <div className="flex flex-col items-center">
-            <SunIcon className="h-5 w-5 text-yellow-500" aria-hidden="true" />
+            <SunIcon
+              className="h-5 w-5 text-yellow-500 mb-2"
+              aria-hidden="true"
+            />
             <p>Sunrise</p>
             <p className="font-semibold">
               {new Date(sys.sunrise * 1000).toLocaleTimeString([], {
@@ -136,7 +139,10 @@ const CityWeather = () => {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <SunIcon className="h-5 w-5 text-orange-600" aria-hidden="true" />
+            <SunIcon
+              className="h-5 w-5 text-orange-600 mb-2"
+              aria-hidden="true"
+            />
             <p>Sunset</p>
             <p className="font-semibold">
               {new Date(sys.sunset * 1000).toLocaleTimeString([], {
