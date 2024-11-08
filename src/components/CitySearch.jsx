@@ -99,10 +99,10 @@ const CitySearch = () => {
       onChange={handleCitySelect}
       className="w-full flex"
     >
-      <div className="flex-1 flex gap-4 items-center">
+      <div className="flex-1 flex gap-4 md:items-center flex-col items-stretch md:flex-row">
         <div className="relative flex-1">
           <ComboboxInput
-            className={`w-full border-0 text-zinc-50 sm:text-sm placeholder-zinc-50 rounded-lg py-3 pl-3 pr-12 bg-zinc-700 focus:ring-0 ring-0 outline-none
+            className={`w-full border-0 text-zinc-50 sm:text-sm placeholder-zinc-50 rounded-lg p-4 bg-zinc-700 focus:ring-0 ring-0 outline-none
       ${query ? "bg-zinc-900 shadow-lg" : ""}
       ${citySuggestions.length > 0 ? "" : ""}
       ${citySuggestions.length <= 0 && query ? "" : ""}
@@ -120,10 +120,10 @@ const CitySearch = () => {
                 <ComboboxOption
                   key={`${suggestion.lat}-${suggestion.lon}`}
                   value={suggestion}
-                  className="group relative flex items-center gap-3 select-none py-2 pl-3 pr-9 text-gray-800 hover:bg-zinc-600 focus:text-white transition-colors duration-100 ease-in-out cursor-pointer"
+                  className="group relative flex items-center gap-3 select-none py-2 px-4 text-gray-800 hover:bg-zinc-600 focus:text-white transition-colors duration-100 ease-in-out cursor-pointer"
                 >
                   <SunIcon
-                    className="h-5 w-5 text-yellow-500 group-hover:text-yellow-400"
+                    className="h-4 w-4 text-yellow-500 group-hover:text-yellow-400"
                     aria-hidden="true"
                   />
                   <div className="flex flex-col">

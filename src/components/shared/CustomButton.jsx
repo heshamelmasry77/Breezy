@@ -12,7 +12,7 @@ const CustomButton = ({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full ${color} px-2.5 py-2 text-xs font-semibold ${textColor} shadow-sm ${hoverColor} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 flex items-center gap-1 justify-center shrink-0`}
+      className={`rounded-full ${color} px-4 py-2 text-xs font-semibold ${textColor} shadow-sm ${hoverColor} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 flex items-center gap-2 justify-center shrink-0`}
     >
       {icon && <span className="flex items-center justify-center">{icon}</span>}
       <span>{text}</span>
