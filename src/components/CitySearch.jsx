@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCity,
@@ -27,6 +27,19 @@ const CitySearch = () => {
   const { citySuggestions } = useSelector((state) => state.weather);
   const [query, setQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState(null);
+
+  // Run the function to get current location on component mount
+  useEffect(() => {
+    const getCurrentLocation = () => {
+      setSelectedCity(null);
+      setQuery("");
+      dispatch(setCity(""));
+      dispatch(setStatus("loading"));
+      dispatch(fetchWeatherDataForCurrentLocation());
+    };
+
+    getCurrentLocation();
+  }, [dispatch]);
 
   // Handle input change and fetch city suggestions
   const handleInputChange = async (event) => {

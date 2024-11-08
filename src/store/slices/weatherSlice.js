@@ -72,6 +72,14 @@ const weatherSlice = createSlice({
     addWeatherDataToHistory: (state, action) => {
       state.weatherDataHistory = action.payload; // Add an entire weather data object to history
     },
+    resetWeatherData: (state) => {
+      state.weatherDataHistory = {}; // Resetting the weather data to an empty object
+      state.city = "";
+      state.temperature = null;
+      state.status = "idle";
+      state.citySuggestions = [];
+      state.error = null;
+    },
   },
 });
 
@@ -82,5 +90,6 @@ export const {
   setCitySuggestions,
   setError,
   addWeatherDataToHistory,
+  resetWeatherData,
 } = weatherSlice.actions;
 export default weatherSlice.reducer;
