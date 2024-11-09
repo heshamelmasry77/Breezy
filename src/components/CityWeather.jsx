@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
   SunIcon,
@@ -22,6 +23,7 @@ const CityWeather = () => {
     weatherData && Object.keys(weatherData).length > 0 && weatherData.main;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const error = useSelector((state) => state.weather.error);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
@@ -46,6 +48,8 @@ const CityWeather = () => {
           await dispatch(
             fetchWeatherDataForCurrentLocation(latitude, longitude)
           );
+          // Clear query parameters from the URL
+          navigate("/", { replace: true });
         } catch {
           dispatch(
             setError("Failed to fetch weather data for the current location.")

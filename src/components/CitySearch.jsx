@@ -1,5 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import {
   setCity,
   setTemperature,
@@ -17,6 +20,7 @@ import {
   resetWeatherData,
 } from "../store/slices/weatherSlice";
 import { showLoader, hideLoader } from "../store/slices/loaderSlice";
+import { addRecentSearch } from "../store/slices/recentSearchesSlice.js";
 import {
   Combobox,
   ComboboxInput,
@@ -28,23 +32,58 @@ import { MapPinIcon, SunIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 const CitySearch = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { citySuggestions, query, selectedCity } = useSelector(
     (state) => state.weather
   );
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const cityName = queryParams.get("name");
+  const lat = queryParams.get("lat");
+  const lon = queryParams.get("lon");
 
+  // First useEffect: Get user's current location on mount only if no query parameters
   useEffect(() => {
-    dispatch(showLoader());
-    const getCurrentLocation = () => {
-      dispatch(setSelectedCity(null));
-      dispatch(setQuery(""));
-      dispatch(setCity(""));
-      dispatch(setStatus("loading"));
-      dispatch(fetchWeatherDataForCurrentLocation());
-    };
+    if (!lat || !lon) {
+      const getCurrentLocation = () => {
+        dispatch(showLoader());
+        dispatch(setSelectedCity(null));
+        dispatch(setQuery(""));
+        dispatch(setCity(""));
+        dispatch(setStatus("loading"));
+        dispatch(fetchWeatherDataForCurrentLocation());
+        dispatch(hideLoader());
+      };
 
-    getCurrentLocation();
-    dispatch(hideLoader());
-  }, [dispatch]);
+      getCurrentLocation();
+    }
+  }, [dispatch, lat, lon]);
+
+  // Second useEffect: Fetch weather data if query parameters (cityName, lat, lon) are present
+  useEffect(() => {
+    if (cityName && lat && lon) {
+      const fetchWeatherDataForCity = async () => {
+        dispatch(setCity(cityName));
+        dispatch(setStatus("loading"));
+        dispatch(showLoader());
+
+        try {
+          const weatherData = await fetchWeatherData(lat, lon);
+          dispatch(addWeatherDataToHistory(weatherData));
+          dispatch(setTemperature(weatherData.main.temp));
+          dispatch(setStatus("succeeded"));
+          dispatch(addRecentSearch({ name: cityName, lat, lon }));
+        } catch {
+          dispatch(setError("Failed to fetch weather data"));
+          dispatch(setStatus("failed"));
+        } finally {
+          dispatch(hideLoader());
+        }
+      };
+
+      fetchWeatherDataForCity().then(() => {});
+    }
+  }, [cityName, lat, lon, dispatch]);
 
   // Handle input change and fetch city suggestions
   const handleInputChange = async (event) => {
@@ -75,13 +114,23 @@ const CitySearch = () => {
     dispatch(setQuery(""));
     dispatch(setCity(city.name));
     dispatch(setStatus("loading"));
-    dispatch(showLoader()); // Show loader when starting the request
+    dispatch(showLoader());
 
     try {
       const weatherData = await fetchWeatherData(city.lat, city.lon);
       dispatch(addWeatherDataToHistory(weatherData));
       dispatch(setTemperature(weatherData.main.temp));
       dispatch(setStatus("succeeded"));
+
+      // Add city with lat and lon to recent searches
+      dispatch(
+        addRecentSearch({ name: city.name, lat: city.lat, lon: city.lon })
+      );
+
+      // Set the new query parameters in the URL
+      navigate(`/?name=${city.name}&lat=${city.lat}&lon=${city.lon}`, {
+        replace: true,
+      });
     } catch {
       dispatch(setError("Failed to fetch weather data"));
       dispatch(setStatus("failed"));
@@ -89,7 +138,6 @@ const CitySearch = () => {
       setTimeout(() => {
         dispatch(hideLoader());
       }, 1000);
-      // Hide loader after the request completes
     }
   };
 
@@ -97,6 +145,8 @@ const CitySearch = () => {
     dispatch(setSelectedCity(null));
     dispatch(setQuery(""));
     dispatch(resetWeatherData());
+    // Clear query parameters from the URL
+    navigate("/", { replace: true });
   };
 
   return (
