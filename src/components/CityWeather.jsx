@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import {
   SunIcon,
   CloudIcon,
@@ -13,6 +14,7 @@ import {
   setStatus,
   fetchWeatherDataForCurrentLocation,
 } from "../store/slices/weatherSlice.js";
+import { showLoader, hideLoader } from "../store/slices/loaderSlice";
 
 const CityWeather = () => {
   const weatherData = useSelector((state) => state.weather.weatherDataHistory);
@@ -21,35 +23,54 @@ const CityWeather = () => {
 
   const dispatch = useDispatch();
   const error = useSelector((state) => state.weather.error);
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
   const handleGetCurrentLocation = () => {
-    if (navigator.geolocation) {
-      dispatch(setStatus("loading"));
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-
-          dispatch(fetchWeatherDataForCurrentLocation(latitude, longitude));
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            dispatch(
-              setError(
-                "Location access denied. Please enable location permissions to view weather data."
-              )
-            );
-          } else {
-            dispatch(
-              setError("Unable to retrieve location. Please try again.")
-            );
-          }
-          dispatch(setStatus("failed"));
-        }
-      );
-    } else {
+    if (!navigator.geolocation) {
       dispatch(setError("Geolocation is not supported by this browser."));
+      dispatch(hideLoader());
+      setIsFetchingLocation(false); // Reset fetching state if unsupported
+      return;
     }
+
+    dispatch(setStatus("loading"));
+    dispatch(showLoader());
+    setIsFetchingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          // Dispatch action to fetch weather data for the obtained coordinates
+          await dispatch(
+            fetchWeatherDataForCurrentLocation(latitude, longitude)
+          );
+        } catch {
+          dispatch(
+            setError("Failed to fetch weather data for the current location.")
+          );
+        } finally {
+          dispatch(hideLoader());
+          setIsFetchingLocation(false); // Reset fetching state on completion
+        }
+      },
+      (error) => {
+        // Handle location access errors
+        if (error.code === error.PERMISSION_DENIED) {
+          dispatch(
+            setError(
+              "Location access denied. Please enable location permissions to view weather data."
+            )
+          );
+        } else {
+          dispatch(setError("Unable to retrieve location. Please try again."));
+        }
+        dispatch(setStatus("failed"));
+        dispatch(hideLoader());
+        setIsFetchingLocation(false); // Reset fetching state on failure
+      }
+    );
   };
 
   if (!hasWeatherData) {
@@ -72,9 +93,12 @@ const CityWeather = () => {
             </svg>
           }
           text="Current Location"
-          color="bg-blue-600 self-center"
+          color={`bg-blue-600 self-center ${
+            isFetchingLocation ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           hoverColor="hover:bg-zinc-500"
           textColor="text-white"
+          disabled={isFetchingLocation}
         />
       </div>
     );
@@ -82,7 +106,6 @@ const CityWeather = () => {
 
   const { main, wind, clouds, weather, sys, name, visibility } = weatherData;
 
-  // Determine the face icon for "Feels Like" based on temperature
   const getFeelsLikeIcon = (temp) => {
     if (temp >= 30) {
       return (
@@ -139,7 +162,7 @@ const CityWeather = () => {
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           {getFeelsLikeIcon(main.feels_like)}
           <p>FEELS LIKE</p>
-          <p className="text-xl font-semibold">
+          <p className="text-xl font-semibold text-center">
             {Math.round(main.feels_like)}°C
           </p>
         </div>
@@ -148,35 +171,39 @@ const CityWeather = () => {
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           <CloudIcon className="h-6 w-6 text-green-400 mb-4" />
           <p>HUMIDITY</p>
-          <p className="text-xl font-semibold">{main.humidity}%</p>
+          <p className="text-xl font-semibold text-center">{main.humidity}%</p>
         </div>
 
         {/* Pressure */}
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           <ArrowDownIcon className="h-6 w-6 text-blue-400 mb-4" />
           <p>PRESSURE</p>
-          <p className="text-xl font-semibold">{main.pressure} hPa</p>
+          <p className="text-xl font-semibold text-center">
+            {main.pressure} hPa
+          </p>
         </div>
 
         {/* Wind Speed */}
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           <ArrowsRightLeftIcon className="h-6 w-6 text-yellow-500 mb-4" />
           <p>WIND SPEED</p>
-          <p className="text-xl font-semibold">{wind.speed} m/s</p>
+          <p className="text-xl font-semibold text-center">{wind.speed} m/s</p>
         </div>
 
         {/* Cloudiness */}
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           <CloudIcon className="h-6 w-6 text-gray-400 mb-4" />
           <p>CLOUDINESS</p>
-          <p className="text-xl font-semibold">{clouds.all}%</p>
+          <p className="text-xl font-semibold text-center">{clouds.all}%</p>
         </div>
 
         {/* Visibility */}
         <div className="flex flex-col items-center bg-zinc-800 p-8 rounded-lg">
           <EyeIcon className="h-6 w-6 text-purple-500 mb-4" />
           <p>VISIBILITY</p>
-          <p className="text-xl font-semibold">{visibility / 1000} km</p>
+          <p className="text-xl font-semibold text-center">
+            {visibility / 1000} km
+          </p>
         </div>
       </div>
 

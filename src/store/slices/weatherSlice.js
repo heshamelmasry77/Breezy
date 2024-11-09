@@ -18,24 +18,43 @@ export const fetchWeatherData = async (lat, lon) => {
 };
 
 export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
-      dispatch(setStatus("loading"));
-      try {
-        const weatherData = await fetchWeatherData(latitude, longitude);
-        dispatch(setTemperature(weatherData.main.temp));
-        dispatch(addWeatherDataToHistory(weatherData));
-        dispatch(setStatus("succeeded"));
-      } catch {
-        dispatch(setError("Failed to fetch weather data for current location"));
-        dispatch(setStatus("failed"));
-      }
-    });
-  } else {
+  if (!navigator.geolocation) {
     dispatch(setError("Geolocation is not supported by this browser."));
     dispatch(setStatus("failed"));
+    return;
   }
+
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        dispatch(setStatus("loading"));
+
+        try {
+          const weatherData = await fetchWeatherData(latitude, longitude);
+          dispatch(setTemperature(weatherData.main.temp));
+          dispatch(addWeatherDataToHistory(weatherData));
+          dispatch(setStatus("succeeded"));
+          resolve(); // Resolves the promise on success
+        } catch (error) {
+          dispatch(
+            setError("Failed to fetch weather data for current location")
+          );
+          dispatch(setStatus("failed"));
+          reject(error); // Rejects the promise on error
+        }
+      },
+      (error) => {
+        dispatch(
+          setError(
+            "Unable to retrieve location. Please try again or check location permissions."
+          )
+        );
+        dispatch(setStatus("failed"));
+        reject(error); // Rejects if geolocation fails
+      }
+    );
+  });
 };
 
 const weatherSlice = createSlice({
