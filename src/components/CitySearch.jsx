@@ -1,8 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   setCity,
   setTemperature,
@@ -41,6 +39,8 @@ const CitySearch = () => {
   const cityName = queryParams.get("name");
   const lat = queryParams.get("lat");
   const lon = queryParams.get("lon");
+
+  const inputRef = useRef(null); // Ref for the input field
 
   // First useEffect: Get user's current location on mount only if no query parameters
   useEffect(() => {
@@ -116,6 +116,11 @@ const CitySearch = () => {
     dispatch(setStatus("loading"));
     dispatch(showLoader());
 
+    // Close the keyboard by blurring the input
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
+
     try {
       const weatherData = await fetchWeatherData(city.lat, city.lon);
       dispatch(addWeatherDataToHistory(weatherData));
@@ -159,6 +164,7 @@ const CitySearch = () => {
       <div className="flex-1 flex gap-4 md:items-center flex-col items-stretch md:flex-row">
         <div className="relative flex-1">
           <ComboboxInput
+            ref={inputRef} // Attach the ref to the input
             className={`w-full border-0 text-zinc-50 sm:text-sm placeholder-zinc-50 rounded-lg p-4 bg-zinc-700 focus:ring-0 ring-0 outline-none ${
               query ? "bg-zinc-900 shadow-lg" : ""
             } transition-all duration-300 ease-in-out`}
