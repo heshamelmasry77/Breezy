@@ -1,5 +1,3 @@
-import React from "react";
-
 function History() {
   return (
     <h1 className={"bg-green-900 text-white"}>
