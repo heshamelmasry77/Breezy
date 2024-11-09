@@ -1,4 +1,4 @@
-import { CloudIcon } from "@heroicons/react/24/outline";
+import { CloudIcon } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
@@ -7,7 +7,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between h-full">
         {/* Logo */}
         <NavLink to="/" className="flex items-center space-x-2 text-white">
-          <CloudIcon className="h-8 w-8 text-yellow-300" aria-hidden="true" />
+          <CloudIcon className="h-8 w-8 text-[#55F]" aria-hidden="true" />
           <span className="text-2xl font-semibold">Breezy</span>
         </NavLink>
 
@@ -16,7 +16,7 @@ const Header = () => {
           <NavLink
             to="/"
             className={({ isActive }) =>
-              isActive ? "text-yellow-300" : "hover:text-yellow-300"
+              isActive ? "text-[#55F]" : "hover:text-[#55F]"
             }
           >
             Home
@@ -24,7 +24,7 @@ const Header = () => {
           <NavLink
             to="/recent-searches"
             className={({ isActive }) =>
-              isActive ? "text-yellow-300" : "hover:text-yellow-300"
+              isActive ? "text-[#55F]" : "hover:text-[#55F]"
             }
           >
             Recent Searches
