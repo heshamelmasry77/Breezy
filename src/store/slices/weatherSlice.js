@@ -27,7 +27,7 @@ export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
         dispatch(setTemperature(weatherData.main.temp));
         dispatch(addWeatherDataToHistory(weatherData));
         dispatch(setStatus("succeeded"));
-      } catch (err) {
+      } catch {
         dispatch(setError("Failed to fetch weather data for current location"));
         dispatch(setStatus("failed"));
       }

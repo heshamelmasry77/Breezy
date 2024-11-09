@@ -16,6 +16,7 @@ import {
   fetchWeatherData,
   resetWeatherData,
 } from "../store/slices/weatherSlice";
+import { showLoader, hideLoader } from "../store/slices/loaderSlice";
 import {
   Combobox,
   ComboboxInput,
@@ -32,6 +33,7 @@ const CitySearch = () => {
   );
 
   useEffect(() => {
+    dispatch(showLoader());
     const getCurrentLocation = () => {
       dispatch(setSelectedCity(null));
       dispatch(setQuery(""));
@@ -41,6 +43,7 @@ const CitySearch = () => {
     };
 
     getCurrentLocation();
+    dispatch(hideLoader());
   }, [dispatch]);
 
   // Handle input change and fetch city suggestions
@@ -53,7 +56,7 @@ const CitySearch = () => {
         const suggestions = await fetchCitySuggestions(newQuery);
         dispatch(setCitySuggestions(suggestions));
         dispatch(setStatus("succeeded"));
-      } catch (err) {
+      } catch {
         dispatch(setError("Failed to fetch city suggestions"));
         dispatch(setStatus("failed"));
       }
@@ -72,15 +75,21 @@ const CitySearch = () => {
     dispatch(setQuery(""));
     dispatch(setCity(city.name));
     dispatch(setStatus("loading"));
+    dispatch(showLoader()); // Show loader when starting the request
 
     try {
       const weatherData = await fetchWeatherData(city.lat, city.lon);
       dispatch(addWeatherDataToHistory(weatherData));
       dispatch(setTemperature(weatherData.main.temp));
       dispatch(setStatus("succeeded"));
-    } catch (err) {
+    } catch {
       dispatch(setError("Failed to fetch weather data"));
       dispatch(setStatus("failed"));
+    } finally {
+      setTimeout(() => {
+        dispatch(hideLoader());
+      }, 1000);
+      // Hide loader after the request completes
     }
   };
 

@@ -29,6 +29,7 @@ const CityWeather = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+
           dispatch(fetchWeatherDataForCurrentLocation(latitude, longitude));
         },
         (error) => {

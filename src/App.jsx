@@ -1,8 +1,8 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import History from "./pages/History";
+import Loader from "./components/shared/Loader";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/history" element={<History />} />
           </Routes>
+          <Loader />
         </main>
       </div>
     </Router>
