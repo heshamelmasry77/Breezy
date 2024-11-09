@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import History from "./pages/History";
+import RecentSearches from "./pages/RecentSearches";
 import Loader from "./components/shared/Loader";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <main className="container mx-auto p-4">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/history" element={<History />} />
+            <Route path="/recent-searches" element={<RecentSearches />} />
           </Routes>
           <Loader />
         </main>
