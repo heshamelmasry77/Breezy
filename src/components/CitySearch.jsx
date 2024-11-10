@@ -8,6 +8,8 @@ import {
   setStatus,
   setError,
   fetchWeatherDataForCurrentLocation,
+  fetchForecastData,
+  setForecastData,
   addWeatherDataToHistory,
   setQuery,
   setSelectedCity,
@@ -25,7 +27,6 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import CustomButton from "./shared/CustomButton";
 import { MapPinIcon, SunIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 const CitySearch = () => {
@@ -122,9 +123,19 @@ const CitySearch = () => {
     }
 
     try {
+      // Fetch current weather data
       const weatherData = await fetchWeatherData(city.lat, city.lon);
       dispatch(addWeatherDataToHistory(weatherData));
       dispatch(setTemperature(weatherData.main.temp));
+
+      // Fetch forecast data for 5 days
+      const forecastData = await fetchForecastData(
+        weatherData.id,
+        city.lat,
+        city.lon
+      );
+      dispatch(setForecastData(forecastData)); // Save forecast data in Redux
+
       dispatch(setStatus("succeeded"));
 
       // Add city with lat and lon to recent searches
