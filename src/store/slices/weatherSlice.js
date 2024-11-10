@@ -17,6 +17,14 @@ export const fetchWeatherData = async (lat, lon) => {
   return response.json();
 };
 
+// Fetch full 5-day forecast data at 3-hour intervals using city ID, latitude, and longitude
+export const fetchForecastData = async (id, lat, lon) => {
+  const response = await fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?id=${id}&lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+  );
+  return response.json();
+};
+
 export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
   if (!navigator.geolocation) {
     dispatch(setError("Geolocation is not supported by this browser."));
@@ -31,10 +39,20 @@ export const fetchWeatherDataForCurrentLocation = () => async (dispatch) => {
         dispatch(setStatus("loading"));
 
         try {
+          // Fetch current weather data for the user's current location
           const weatherData = await fetchWeatherData(latitude, longitude);
           dispatch(setTemperature(weatherData.main.temp));
           dispatch(addWeatherDataToHistory(weatherData));
           dispatch(setStatus("succeeded"));
+
+          // Fetch forecast data for the next 5 days based on the same latitude and longitude
+          const forecastData = await fetchForecastData(
+            weatherData.id,
+            latitude,
+            longitude
+          );
+          dispatch(setForecastData(forecastData)); // Save forecast data in Redux
+
           resolve(); // Resolves the promise on success
         } catch (error) {
           dispatch(
@@ -65,6 +83,7 @@ const weatherSlice = createSlice({
     status: "idle",
     citySuggestions: [],
     weatherDataHistory: {},
+    forecastData: null, // Added forecastData to the state
     error: null,
     query: "", // Added query to the state
     selectedCity: null, // Added selectedCity to the state
@@ -104,6 +123,9 @@ const weatherSlice = createSlice({
     setSelectedCity: (state, action) => {
       state.selectedCity = action.payload; // Added action to set selectedCity
     },
+    setForecastData: (state, action) => {
+      state.forecastData = action.payload; // Store forecast data
+    },
   },
 });
 
@@ -115,6 +137,7 @@ export const {
   setError,
   addWeatherDataToHistory,
   resetWeatherData,
+  setForecastData,
   setQuery,
   setSelectedCity,
 } = weatherSlice.actions;
