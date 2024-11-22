@@ -1,19 +1,19 @@
 import PropTypes from "prop-types";
-import {
-  SunIcon,
-  CloudIcon,
-  ArrowDownIcon,
-  ArrowPathIcon,
-} from "@heroicons/react/24/solid";
+import iconMap from "../assets/iconMap";
 
 const ForecastCard = ({ forecast }) => {
   const { dt, main, weather, wind } = forecast;
+
+  // Get formatted date
   const date = new Date(dt * 1000).toLocaleString("en-US", {
     weekday: "short",
     hour: "numeric",
     minute: "numeric",
     hour12: true,
   });
+
+  // Get the appropriate icon component
+  const WeatherIcon = iconMap[weather[0].icon] || iconMap["03d"]; // Default to '03d' (Cloudy)
 
   return (
     <div className="bg-zinc-800 p-4 rounded-lg text-white flex flex-col items-center min-w-64">
@@ -22,11 +22,7 @@ const ForecastCard = ({ forecast }) => {
 
       {/* Weather Icon and Description */}
       <div className="flex items-center space-x-2">
-        <img
-          src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
-          alt={weather[0].description}
-          className="h-10 w-10"
-        />
+        <WeatherIcon size={32} color="#fff" />
         <span className="capitalize text-gray-300">
           {weather[0].description}
         </span>
@@ -34,7 +30,6 @@ const ForecastCard = ({ forecast }) => {
 
       {/* Temperature Details */}
       <div className="flex items-center space-x-2 my-2">
-        <SunIcon className="h-5 w-5 text-yellow-300" aria-hidden="true" />
         <span className="text-2xl">{Math.round(main.temp)}°C</span>
       </div>
       <div className="text-sm text-gray-400">
@@ -43,16 +38,13 @@ const ForecastCard = ({ forecast }) => {
 
       {/* Additional Details */}
       <div className="flex flex-col mt-2 space-y-1">
-        <div className="flex items-center space-x-2">
-          <CloudIcon className="h-5 w-5 text-blue-400" />
+        <div>
           <span>{main.humidity}% Humidity</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <ArrowPathIcon className="h-5 w-5 text-purple-400" />
+        <div>
           <span>{wind.speed} m/s Wind</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <ArrowDownIcon className="h-5 w-5 text-green-400" />
+        <div>
           <span>{main.pressure} hPa Pressure</span>
         </div>
       </div>

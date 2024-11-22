@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Geolocation } from "@capacitor/geolocation"; // Import Capacitor Geolocation plugin
 import {
   SunIcon,
   CloudIcon,
@@ -27,54 +28,43 @@ const CityWeather = () => {
   const error = useSelector((state) => state.weather.error);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      dispatch(setError("Geolocation is not supported by this browser."));
-      dispatch(hideLoader());
-      setIsFetchingLocation(false); // Reset fetching state if unsupported
-      return;
-    }
+  const handleGetCurrentLocation = async () => {
+    try {
+      // Request location permissions using Capacitor
+      const permission = await Geolocation.requestPermissions();
 
-    dispatch(setStatus("loading"));
-    dispatch(showLoader());
-    setIsFetchingLocation(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          // Dispatch action to fetch weather data for the obtained coordinates
-          await dispatch(
-            fetchWeatherDataForCurrentLocation(latitude, longitude)
-          );
-          // Clear query parameters from the URL
-          navigate("/", { replace: true });
-        } catch {
-          dispatch(
-            setError("Failed to fetch weather data for the current location.")
-          );
-        } finally {
-          dispatch(hideLoader());
-          setIsFetchingLocation(false); // Reset fetching state on completion
-        }
-      },
-      (error) => {
-        // Handle location access errors
-        if (error.code === error.PERMISSION_DENIED) {
-          dispatch(
-            setError(
-              "Location access denied. Please enable location permissions to view weather data."
-            )
-          );
-        } else {
-          dispatch(setError("Unable to retrieve location. Please try again."));
-        }
-        dispatch(setStatus("failed"));
-        dispatch(hideLoader());
-        setIsFetchingLocation(false); // Reset fetching state on failure
+      if (permission.location !== "granted") {
+        dispatch(
+          setError(
+            "Location access denied. Please enable location permissions to view weather data."
+          )
+        );
+        return;
       }
-    );
+
+      dispatch(setStatus("loading"));
+      dispatch(showLoader());
+      setIsFetchingLocation(true);
+
+      // Get the user's current location
+      const position = await Geolocation.getCurrentPosition();
+      const { latitude, longitude } = position.coords;
+
+      // Fetch weather data for the obtained coordinates
+      await dispatch(fetchWeatherDataForCurrentLocation(latitude, longitude));
+      navigate("/", { replace: true }); // Clear query parameters from the URL
+    } catch (error) {
+      console.error("Error fetching location:", error);
+      dispatch(
+        setError(
+          "Unable to retrieve location. Please try again or enable location services."
+        )
+      );
+      dispatch(setStatus("failed"));
+    } finally {
+      dispatch(hideLoader());
+      setIsFetchingLocation(false);
+    }
   };
 
   if (!hasWeatherData) {
