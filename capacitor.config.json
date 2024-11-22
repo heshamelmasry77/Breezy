@@ -1,0 +1,8 @@
+{
+  "appId": "com.breezyapp.unique",
+  "appName": "Breezy",
+  "webDir": "dist",
+  "plugins": {
+    "Geolocation": {}
+  }
+}
